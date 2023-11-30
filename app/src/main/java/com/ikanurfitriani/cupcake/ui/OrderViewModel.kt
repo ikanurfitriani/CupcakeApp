@@ -1,5 +1,7 @@
+// Untuk mendefinisikan package dari file ini
 package com.ikanurfitriani.cupcake.ui
 
+// Import library, kelas atau file yang dibutuhkan
 import androidx.lifecycle.ViewModel
 import com.ikanurfitriani.cupcake.data.OrderUiState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -11,27 +13,21 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
-/** Price for a single cupcake */
+// Untuk harga per cupcake
 private const val PRICE_PER_CUPCAKE = 2.00
 
-/** Additional cost for same day pickup of an order */
+// Biaya tambahan untuk pengambilan pada hari yaang sama
 private const val PRICE_FOR_SAME_DAY_PICKUP = 3.00
 
-/**
- * [OrderViewModel] holds information about a cupcake order in terms of quantity, flavor, and
- * pickup date. It also knows how to calculate the total price based on these order details.
- */
+// [OrderViewModel] menyimpan informasi tentang pesanan cupcake dalam hal kuantitas, rasa, dan
+// tanggal pengambilan. Ia juga mengetahui cara menghitung harga total berdasarkan detail pesanan ini
 class OrderViewModel : ViewModel() {
 
-    /**
-     * Cupcake state for this order
-     */
+    // Cupcake state untuk pemesanan
     private val _uiState = MutableStateFlow(OrderUiState(pickupOptions = pickupOptions()))
     val uiState: StateFlow<OrderUiState> = _uiState.asStateFlow()
 
-    /**
-     * Set the quantity [numberCupcakes] of cupcakes for this order's state and update the price
-     */
+    // Untuk menetapkan jumlah [numberCupcakes] cupcakes untuk status pesanan ini dan perbarui harganya
     fun setQuantity(numberCupcakes: Int) {
         _uiState.update { currentState ->
             currentState.copy(
@@ -41,19 +37,15 @@ class OrderViewModel : ViewModel() {
         }
     }
 
-    /**
-     * Set the [desiredFlavor] of cupcakes for this order's state.
-     * Only 1 flavor can be selected for the whole order.
-     */
+    // Untuk mengatur [desiredFlavor] cupcake untuk status pesanan ini
+    // Hanya 1 rasa yang dapat dipilih untuk keseluruhan pesanan
     fun setFlavor(desiredFlavor: String) {
         _uiState.update { currentState ->
             currentState.copy(flavor = desiredFlavor)
         }
     }
 
-    /**
-     * Set the [pickupDate] for this order's state and update the price
-     */
+    // Menetapkan [pickupDate] untuk status pesanan ini dan perbarui harganya
     fun setDate(pickupDate: String) {
         _uiState.update { currentState ->
             currentState.copy(
@@ -63,36 +55,30 @@ class OrderViewModel : ViewModel() {
         }
     }
 
-    /**
-     * Reset the order state
-     */
+    // Digunakan untuk mereset status UI pesanan menjadi nilai awal
     fun resetOrder() {
         _uiState.value = OrderUiState(pickupOptions = pickupOptions())
     }
 
-    /**
-     * Returns the calculated price based on the order details.
-     */
+    // Mengembalikan harga yang dihitung berdasarkan detail pesanan
     private fun calculatePrice(
         quantity: Int = _uiState.value.quantity,
         pickupDate: String = _uiState.value.date
     ): String {
         var calculatedPrice = quantity * PRICE_PER_CUPCAKE
-        // If the user selected the first option (today) for pickup, add the surcharge
+        // Jika pengguna memilih opsi pertama (hari ini) untuk pengambilan, tambahkan biaya tambahan
         if (pickupOptions()[0] == pickupDate) {
             calculatedPrice += PRICE_FOR_SAME_DAY_PICKUP
         }
         return NumberFormat.getCurrencyInstance().format(calculatedPrice)
     }
 
-    /**
-     * Returns a list of date options starting with the current date and the following 3 dates.
-     */
+    // Mengembalikan daftar opsi tanggal yang dimulai dengan tanggal sekarang dan 3 tanggal berikutnya
     private fun pickupOptions(): List<String> {
         val dateOptions = mutableListOf<String>()
         val formatter = SimpleDateFormat("E MMM d", Locale.getDefault())
         val calendar = Calendar.getInstance()
-        // add current date and the following 3 dates.
+        // Menambahkan tanggal sekarang dan 3 tanggal berikutnya
         repeat(4) {
             dateOptions.add(formatter.format(calendar.time))
             calendar.add(Calendar.DATE, 1)

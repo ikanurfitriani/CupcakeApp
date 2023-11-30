@@ -1,5 +1,7 @@
+// Untuk mendefinisikan package dari file ini
 package com.ikanurfitriani.cupcake.ui
 
+// Import library, kelas atau file yang dibutuhkan
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,12 +27,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.ikanurfitriani.cupcake.R
 import com.ikanurfitriani.cupcake.ui.components.FormattedPriceLabel
 
-/**
- * Composable that displays the list of items as [RadioButton] options,
- * [onSelectionChanged] lambda that notifies the parent composable when a new value is selected,
- * [onCancelButtonClicked] lambda that cancels the order when user clicks cancel and
- * [onNextButtonClicked] lambda that triggers the navigation to next screen
- */
+// Composable yang menampilkan daftar item sebagai opsi [RadioButton]
+// Lambda [onSelectionChanged] yang memberi tahu composable induk ketika nilai baru dipilih
+// Lambda [onCancelButtonClicked] yang membatalkan pesanan ketika pengguna mengklik batal dan
+// Lambda [onNextButtonClicked] yang memicu navigasi ke layar berikutnya
 @Composable
 fun SelectOptionScreen(
     subtotal: String,
@@ -40,14 +40,19 @@ fun SelectOptionScreen(
     onNextButtonClicked: () -> Unit = {},
     modifier: Modifier = Modifier
 ){
+    // Untuk menyimpan dan mengembalikan nilai selectedValue selama siklus hidup komponen
     var selectedValue by rememberSaveable { mutableStateOf("") }
 
+    // Komposabel Column yang mengatur elemen-elemen anaknya dalam satu kolom vertikal
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
+        // Mendefinisikan column dengan menambahkan padding dari dimensi sumber daya yang ada
         Column(modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium))){
+            // Penggunaan forEach untuk looping atau iterasi
             options.forEach { item ->
+                // Membuat baris untuk setiap elemen dalam daftar options
                 Row(
                     modifier = Modifier.selectable(
                         selected = selectedValue == item,
@@ -58,6 +63,7 @@ fun SelectOptionScreen(
                     ),
                     verticalAlignment = Alignment.CenterVertically
                 ){
+                    // Membuat tombol radio untuk setiap elemen dalam daftar options
                     RadioButton(
                         selected = selectedValue == item,
                         onClick = {
@@ -65,13 +71,16 @@ fun SelectOptionScreen(
                             onSelectionChanged(item)
                         }
                     )
+                    // Mengatur dan menampilkan text untuk setiap elemen dalam daftar options
                     Text(item)
                 }
             }
+            // Menambahkan garis pembatas
             Divider(
                 thickness = dimensionResource(R.dimen.thickness_divider),
                 modifier = Modifier.padding(bottom = dimensionResource(R.dimen.padding_medium))
             )
+            // Menampilkan label harga yang diformat pada bagian bawah
             FormattedPriceLabel(
                 subtotal = subtotal,
                 modifier = Modifier
@@ -82,6 +91,7 @@ fun SelectOptionScreen(
                     )
             )
         }
+        // Row yang berisi dua tombol yaitu Cancel dan Next
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -90,12 +100,14 @@ fun SelectOptionScreen(
             horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_medium)),
             verticalAlignment = Alignment.Bottom
         ){
+            // Membuat tombol Cancel
             OutlinedButton(modifier = Modifier.weight(1f), onClick = onCancelButtonClicked) {
                 Text(stringResource(R.string.cancel))
             }
+            // Membuat tombol Next dan akan aktif jika options tidak kosong
             Button(
                 modifier = Modifier.weight(1f),
-                // the button is enabled when the user makes a selection
+                // tombol diaktifkan ketika pengguna membuat pilihan
                 enabled = selectedValue.isNotEmpty(),
                 onClick = onNextButtonClicked
             ) {
@@ -106,6 +118,7 @@ fun SelectOptionScreen(
 
 }
 
+// Pratinjau dari fungsi SelectOptionScreen
 @Preview
 @Composable
 fun SelectOptionPreview(){
