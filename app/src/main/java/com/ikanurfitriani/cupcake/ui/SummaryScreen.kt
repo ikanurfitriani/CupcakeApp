@@ -1,5 +1,7 @@
+// Untuk mendefinisikan package dari file ini
 package com.ikanurfitriani.cupcake.ui
 
+// Import library, kelas atau file yang dibutuhkan
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,11 +26,9 @@ import com.ikanurfitriani.cupcake.R
 import com.ikanurfitriani.cupcake.data.OrderUiState
 import com.ikanurfitriani.cupcake.ui.components.FormattedPriceLabel
 
-/**
- * This composable expects [orderUiState] that represents the order state, [onCancelButtonClicked]
- * lambda that triggers canceling the order and passes the final order to [onSendButtonClicked]
- * lambda
- */
+// Composable ini mengharapkan [orderUiState] yang mewakili status pesanan, [onCancelButtonClicked]
+// lambda yang memicu pembatalan pesanan dan meneruskan pesanan terakhir ke [onSendButtonClicked]
+// lambda
 @Composable
 fun OrderSummaryScreen(
     orderUiState: OrderUiState,
@@ -36,14 +36,16 @@ fun OrderSummaryScreen(
     onSendButtonClicked: (String, String) -> Unit,
     modifier: Modifier = Modifier
 ){
+    // Untuk mengakses sumber daya aplikasi seperti string, gambar, dan jenis sumber daya lainnya
     val resources = LocalContext.current.resources
 
+    // Untuk mendapatkan string terkait dengan jumlah tertentu dari suatu kuantitas
     val numberOfCupcakes = resources.getQuantityString(
         R.plurals.cupcakes,
         orderUiState.quantity,
         orderUiState.quantity
     )
-    //Load and format a string resource with the parameters.
+    // Muat dan format sumber daya string dengan parameternya
     val orderSummary = stringResource(
         R.string.order_details,
         numberOfCupcakes,
@@ -51,31 +53,38 @@ fun OrderSummaryScreen(
         orderUiState.date,
         orderUiState.quantity
     )
+    // String hasil memuat string sumber daya
     val newOrder = stringResource(R.string.new_cupcake_order)
-    //Create a list of order summary to display
+    // Buat daftar ringkasan pesanan untuk ditampilkan
     val items = listOf(
-        // Summary line 1: display selected quantity
+        // Ringkasan baris 1: menampilkan kuantitas yang dipilih
         Pair(stringResource(R.string.quantity), numberOfCupcakes),
-        // Summary line 2: display selected flavor
+        // Ringkasan baris 2: menampilkan rasa yang dipilih
         Pair(stringResource(R.string.flavor), orderUiState.flavor),
-        // Summary line 3: display selected pickup date
+        // Ringkasan baris 3: menampilkan tanggal pengambilan yang dipilih
         Pair(stringResource(R.string.pickup_date), orderUiState.date)
     )
 
+    // Komposabel Column yang mengatur elemen-elemen anaknya dalam satu kolom vertikal
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
+        // Komposabel Column yang mengatur elemen-elemen anaknya dalam satu kolom vertikal
         Column(
             modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium)),
             verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_small))
         ) {
+            // Menampilkan label dan nilai untuk setiap item pesanan
             items.forEach { item ->
                 Text(item.first.uppercase())
                 Text(text = item.second, fontWeight = FontWeight.Bold)
+                // Menampilkan garis pembatas antar item
                 Divider(thickness = dimensionResource(R.dimen.thickness_divider))
             }
+            // Memberikan ruang di atas dan di bawah elemen
             Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_small)))
+            // Menampilkan harga dengan format yang sudah ditentukan
             FormattedPriceLabel(
                 subtotal = orderUiState.price,
                 modifier = Modifier.align(Alignment.End)
@@ -86,15 +95,19 @@ fun OrderSummaryScreen(
                 .weight(1f, false)
                 .padding(dimensionResource(R.dimen.padding_medium))
         ) {
+            // Komposabel Column yang mengatur elemen-elemen anaknya dalam satu kolom vertikal
             Column(
                 verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_small))
             ) {
+                // Tombol untuk kirim pesanan
                 Button(
                     modifier = Modifier.fillMaxWidth(),
+                    // Memanggil fungsi onSendButtonClicked
                     onClick = { onSendButtonClicked(newOrder, orderSummary) }
                 ) {
                     Text(stringResource(R.string.send))
                 }
+                // Tombol untuk batalkan pesanan
                 OutlinedButton(
                     modifier = Modifier.fillMaxWidth(),
                     onClick = onCancelButtonClicked
@@ -106,6 +119,7 @@ fun OrderSummaryScreen(
     }
 }
 
+// Pratinjau dari fungsi OrderSummaryScreen
 @Preview
 @Composable
 fun OrderSummaryPreview(){
